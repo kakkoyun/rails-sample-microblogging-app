@@ -17,6 +17,7 @@ group :test do
   gem 'capybara', '2.1.0'
 end
 
+gem 'factory_girl_rails', '4.2.1'
 gem 'bcrypt-ruby', '3.1.2'
 gem 'sass-rails', '4.0.1'
 gem 'bootstrap-sass', '~> 3.1.1'
