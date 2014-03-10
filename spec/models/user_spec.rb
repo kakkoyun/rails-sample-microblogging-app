@@ -1,11 +1,18 @@
 require 'spec_helper'
 
 describe User do
-  before { @user = User.new email: 'example@example.com', name: 'example' }
+  before do
+    @user = User.new(email: 'example@example.com', name: 'example',
+                      password: "foobar", password_confirmation: "foobar")
+  end
+
   subject { @user }
 
   it { should respond_to :email }
   it { should respond_to :name }
+  it { should respond_to :password_digest }
+  it { should respond_to :password }
+  it { should respond_to :password_confirmation }
 
   it 'should respond to email' do # More explicit
     expect(@user).to respond_to :email
@@ -55,7 +62,7 @@ describe User do
     end
   end
 
-  describe "when email address is already taken" do
+  describe 'when email address is already taken' do
     before do
       user_with_same_email = @user.dup
       user_with_same_email.email = @user.email.upcase # check case sensitivity
@@ -64,4 +71,16 @@ describe User do
     it { should_not be_valid }
   end
 
+  describe "when user's password not present" do
+    before do
+          @user = User.new(email: 'example@example.com', name: 'example',
+                            password: "", password_confirmation: "")
+    end
+    it { should_not be_valid }
+  end
+
+  describe "when user's password mismatched" do
+    before { @user.password_confirmation = 'mismatch#asdasdas' }
+    it { should_not be_valid }
+  end
 end
