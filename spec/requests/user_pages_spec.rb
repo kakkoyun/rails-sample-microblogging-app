@@ -20,7 +20,6 @@ describe "User Pages" do
     before { visit user_path(user) }
 
     it { should have_content user.name }
-    it { should have_content user.email }
     it { should have_title user.name }
   end
 end
