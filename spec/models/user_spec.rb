@@ -11,4 +11,57 @@ describe User do
     expect(@user).to respond_to :email
   end
 
+  it { should be_valid }
+
+  # OR
+
+  it "should be valid" do
+    expect(@user).to be_valid
+  end
+
+  describe 'when name not present' do
+    before { @user.name = '' }
+    it { should_not be_valid }
+  end
+
+  describe 'when email not present' do
+    before { @user.email = '' }
+    it { should_not be_valid }
+  end
+
+  describe 'when name is too long' do
+    before { @user.name = 'x' * 51 }
+    it { should_not be_valid }
+  end
+
+  describe 'when email is not properly formatted' do
+    it 'should be invalid' do
+      addresses = %w[user@foo,com user_at_foo.org example.user@foo.
+       foo@bar_baz.com foo@bar+baz.com]
+       addresses.each do |invalid_adress|
+        @user.email = invalid_adress
+        expect(@user).not_to be_valid
+      end
+    end
+  end
+
+  describe 'when email is properly formatted' do
+    it 'should be valid' do
+      addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
+      addresses.each do |valid_adress|
+        @user.email = valid_adress
+        expect(@user).to be_valid
+      end
+    end
+  end
+
+  describe "when email address is already taken" do
+    before do
+      user_with_same_email = @user.dup
+      user_with_same_email.email = @user.email.upcase # check case sensitivity
+      user_with_same_email.save
+    end
+    it { should_not be_valid }
+  end
+
 end
