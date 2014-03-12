@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "User Pages" do
+describe 'User Pages' do
   subject { page }
 
-  describe "Sign Up page" do
+  describe 'Sign Up page' do
     before { visit signup_path }
     it { should have_selector('h1', text: 'Sign Up') }
     it { should have_title(full_title('Sign Up')) }
@@ -11,16 +11,25 @@ describe "User Pages" do
 
   describe 'signup' do
     before { visit signup_path }
-    let(:submit) { "Create my Account" }
+    let(:submit) { 'Create my Account' }
 
     describe 'with invalid information' do
       it 'should not create a new user, not change count' do
         expect(click_button submit).not_to change(User, :count)
       end
+
+      describe 'after submission' do
+        before { click_button submit }
+
+        it { should have_title('Sign up') }
+        it { should have_content('error') }
+      end
     end
 
     describe 'with valid information' do
+
       let(:user) { FactoryGirl.create :user }
+
       before do
         fill_in 'Name', with: user.name
         fill_in 'Email', with: user.email
@@ -30,6 +39,14 @@ describe "User Pages" do
 
       it 'should create a new user' do
         expect(click_button submit).to change(User, :count).by 1
+      end
+
+      describe 'after saving the user' do
+        before { click_button submit }
+        let(:user) { User.find_by(email: 'kakkoyun@gmail.com') }
+
+        it { should have_title(user.name) }
+        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
       end
     end
   end
