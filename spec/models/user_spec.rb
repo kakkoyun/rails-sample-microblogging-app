@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do
   before do
     @user = User.new(email: 'example@example.com', name: 'example',
-                     password: "foobar", password_confirmation: "foobar")
+                     password: 'foobar', password_confirmation: 'foobar')
   end
 
   subject { @user }
@@ -22,7 +22,7 @@ describe User do
 
   # OR
 
-  it "should be valid" do
+  it 'should be valid' do
     expect(@user).to be_valid
   end
 
@@ -45,8 +45,8 @@ describe User do
   describe 'when email is not properly formatted' do
     it 'should be invalid' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
-       foo@bar_baz.com foo@bar+baz.com foo@bar..com]
-       addresses.each do |invalid_adress|
+                     foo@bar_baz.com foo@bar+baz.com foo@bar..com]
+      addresses.each do |invalid_adress|
         @user.email = invalid_adress
         expect(@user).not_to be_valid
       end
@@ -72,10 +72,10 @@ describe User do
     it { should_not be_valid }
   end
 
-  describe "email address with mixed case" do
-    let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
+  describe 'email address with mixed case' do
+    let(:mixed_case_email) { 'Foo@ExAMPle.CoM' }
 
-    it "should be saved as all lower-case" do
+    it 'should be saved as all lower-case' do
       @user.email = mixed_case_email
       @user.save
       expect(@user.reload.email).to eq mixed_case_email.downcase
@@ -83,25 +83,25 @@ describe User do
   end
 
   # Password
-  describe "when user's password not present" do
+  describe 'when user\'s password not present' do
     before do
       @user = User.new(email: 'example@example.com', name: 'example',
-                       password: "", password_confirmation: "")
+                       password: '', password_confirmation: '')
     end
     it { should_not be_valid } # be_invalid
   end
 
-  describe "with a password too short" do
+  describe 'with a password too short' do
     before { @user.password = @user.password_confirmation = 'a' * 5 }
     it { should  be_invalid }
   end
 
-  describe "when user's password mismatched" do
+  describe 'when user\'s password mismatched' do
     before { @user.password_confirmation = 'mismatch#asdasdas' }
     it { should_not be_valid }
   end
 
-  describe "return value of authentication" do
+  describe 'return value of authentication' do
     before { @user.save }
     let(:found_user) { User.find_by email: @user.email }
 
@@ -109,8 +109,8 @@ describe User do
       it { should eq found_user.authenticate(@user.password) }
     end
 
-    describe "with invalid password" do
-      let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+    describe 'with invalid password' do
+      let(:user_for_invalid_password) { found_user.authenticate('invalid') }
 
       it { should_not eq user_for_invalid_password }
       # Same as 'it'

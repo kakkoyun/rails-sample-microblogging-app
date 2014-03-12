@@ -9,6 +9,31 @@ describe "User Pages" do
     it { should have_title(full_title('Sign Up')) }
   end
 
+  describe 'signup' do
+    before { visit signup_path }
+    let(:submit) { "Create my Account" }
+
+    describe 'with invalid information' do
+      it 'should not create a new user, not change count' do
+        expect(click_button submit).not_to change(User, :count)
+      end
+    end
+
+    describe 'with valid information' do
+      let(:user) { FactoryGirl.create :user }
+      before do
+        fill_in 'Name', with: user.name
+        fill_in 'Email', with: user.email
+        fill_in 'Password', with: user.password
+        fill_in 'Password Confirmation', with: user.password_confirmation
+      end
+
+      it 'should create a new user' do
+        expect(click_button submit).to change(User, :count).by 1
+      end
+    end
+  end
+
   describe 'User profile page' do
     # Amelastion way
     # let(:user) do
