@@ -9,25 +9,24 @@ describe 'User Pages' do
     it { should have_title(full_title('Sign Up')) }
   end
 
-  describe 'signup' do
+  describe "signup" do
     before { visit signup_path }
     let(:submit) { "Create my Account" }
 
     describe 'with invalid information' do
       it 'should not create a new user, not change count' do
-        expect(click_button submit).not_to change(User, :count)
+        expect { click_button submit }.not_to change(User, :count)
       end
 
       describe 'after submission' do
         before { click_button submit }
-
-        it { should have_title('Sign up') }
+        it { should have_title(full_title('Sign Up')) }
         it { should have_content('error') }
       end
     end
 
     describe 'with valid information' do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryGirl.create(:user)}
       before do
         fill_in 'Name', with: user.name
         fill_in 'Email', with: user.email
@@ -36,14 +35,14 @@ describe 'User Pages' do
       end
 
       it 'should create a new user' do
-        expect(click_button submit).to change(User, :count).by 1
+        expect { click_button submit }.to change(User, :count).by(1)
       end
 
       describe 'after saving the user' do
         before { click_button submit }
-        let(:user) { User.find_by(email: 'kakkoyun@gmail.com') }
+        let(:user) { User.find_by(email: "foo@bar.com") }
 
-        it { should have_link('Sign out') }
+        it { should have_link('Sign-out') }
         it { should have_title(user.name) }
         it { should have_selector('div.alert.alert-success', text: 'Welcome') }
       end
@@ -57,10 +56,10 @@ describe 'User Pages' do
     #               password: 'aaaaaa', password_confirmation: 'aaaaaa')
     # end
 
-    let(:user) {  FactoryGirl.create(:user) }
-    before { visit user_path(user) }
+    let(:example_user) {  FactoryGirl.create(:another_user) }
+    before { visit user_path(example_user) }
 
-    it { should have_content user.name }
-    it { should have_title user.name }
+    it { should have_content example_user.name }
+    it { should have_title example_user.name }
   end
 end
