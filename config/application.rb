@@ -27,6 +27,5 @@ module SampleApp
     I18n.enforce_available_locales = true
 
     config.assets.precompile += %w[*.png *.gif *.jpg *.jpeg]
-    config.force_ssl = true
   end
 end

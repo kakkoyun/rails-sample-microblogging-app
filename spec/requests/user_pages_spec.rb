@@ -11,7 +11,7 @@ describe 'User Pages' do
 
   describe 'signup' do
     before { visit signup_path }
-    let(:submit) { 'Create my Account' }
+    let(:submit) { "Create my Account" }
 
     describe 'with invalid information' do
       it 'should not create a new user, not change count' do
@@ -27,9 +27,7 @@ describe 'User Pages' do
     end
 
     describe 'with valid information' do
-
-      let(:user) { FactoryGirl.create :user }
-
+      let(:user) { FactoryGirl.create(:user) }
       before do
         fill_in 'Name', with: user.name
         fill_in 'Email', with: user.email
@@ -45,6 +43,7 @@ describe 'User Pages' do
         before { click_button submit }
         let(:user) { User.find_by(email: 'kakkoyun@gmail.com') }
 
+        it { should have_link('Sign out') }
         it { should have_title(user.name) }
         it { should have_selector('div.alert.alert-success', text: 'Welcome') }
       end

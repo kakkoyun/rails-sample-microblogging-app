@@ -13,6 +13,15 @@ describe User do
   it { should respond_to :password_digest }
   it { should respond_to :password }
   it { should respond_to :password_confirmation }
+  it { should respond_to :authenticate }
+  it { should respond_to :remember_token }
+
+  describe 'remember_token' do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
+    # Same as:
+    # it { expect(@user.remember_token).not_to be_blank }
+  end
 
   it 'should respond to email' do # More explicit
     expect(@user).to respond_to :email
@@ -45,8 +54,8 @@ describe User do
   describe 'when email is not properly formatted' do
     it 'should be invalid' do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
-                     foo@bar_baz.com foo@bar+baz.com foo@bar..com]
-      addresses.each do |invalid_adress|
+       foo@bar_baz.com foo@bar+baz.com foo@bar..com]
+       addresses.each do |invalid_adress|
         @user.email = invalid_adress
         expect(@user).not_to be_valid
       end
