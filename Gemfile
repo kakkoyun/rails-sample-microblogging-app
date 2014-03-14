@@ -7,17 +7,17 @@ gem 'pg', '0.15.1'
 
 group :development, :test do
   gem 'sqlite3', '1.3.8'
-  gem 'rspec-rails', '2.13.1'
-  gem 'zeus', '~> 0.13.0'
+  gem 'rspec-rails'
+  gem 'zeus'
   gem 'rake'
 end
 
 group :test do
-  gem 'selenium-webdriver', '2.35.1'
-  gem 'capybara', '2.1.0'
+  gem 'selenium-webdriver'
+  gem 'capybara'
 end
 
-gem 'factory_girl_rails', '4.2.1'
+gem 'factory_girl_rails'
 gem 'bcrypt-ruby', '3.1.2'
 gem 'sass-rails', '4.0.1'
 gem 'bootstrap-sass', '~> 3.1.1'

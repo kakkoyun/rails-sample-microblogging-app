@@ -25,41 +25,60 @@ describe 'User Pages' do
       end
     end
 
-    describe 'with valid information' do
-      let(:user) { FactoryGirl.create(:user)}
-      before do
-        fill_in 'Name', with: user.name
-        fill_in 'Email', with: user.email
-        fill_in 'Password', with: user.password
-        fill_in 'Password Confirmation', with: user.password_confirmation
-      end
+    # describe 'with valid information' do
+    #   let(:user) { FactoryGirl.create(:user) }
+    #   before do
+    #     fill_in 'Name', with: user.name
+    #     fill_in 'Email', with: user.email
+    #     fill_in 'Password', with: user.password
+    #     fill_in 'Password Confirmation', with: user.password_confirmation
+    #   end
+    #   after { user.destroy }
 
-      it 'should create a new user' do
-        expect { click_button submit }.to change(User, :count).by(1)
-      end
+    #   it 'should create a new user' do
+    #     expect { click_button(submit) }.to change(User, :count).by(1)
+    #   end
 
-      describe 'after saving the user' do
-        before { click_button submit }
-        let(:user) { User.find_by(email: "foo@bar.com") }
+    #   describe 'after saving the user' do
+    #     before { click_button submit }
+    #     let(:user) { User.find_by(email: "foo@bar.com") }
 
-        it { should have_link('Sign-out') }
-        it { should have_title(user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
-      end
-    end
+    #     it { should have_link('Sign-out') }
+    #     it { should have_title(user.name) }
+    #     it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+    #   end
+    # end
   end
 
   describe 'User profile page' do
-    # Amelastion way
-    # let(:user) do
-    #   User.create(email: 'q@q.com', name: 'kemal',
-    #               password: 'aaaaaa', password_confirmation: 'aaaaaa')
-    # end
+    let(:user) do
+      User.create(email: 'q@q.com', name: 'kemal',
+                  password: 'aaaaaa', password_confirmation: 'aaaaaa')
+    end
 
-    let(:example_user) {  FactoryGirl.create(:another_user) }
-    before { visit user_path(example_user) }
+    # let(:user) {  FactoryGirl.create(:user) }
+    before { visit user_path(user) }
+    after { user.destroy }
 
-    it { should have_content example_user.name }
-    it { should have_title example_user.name }
+    it { should have_content user.name }
+    it { should have_title user.name }
+  end
+
+
+  describe 'user edit' do
+    let(:user) { FactoryGirl.create :user }
+    before { visit edit_user_path(user) }
+    after { user.destroy }
+
+    describe "page" do
+      it { should have_content("Update your profile") }
+      it { should have_title("Edit user") }
+      it { should have_link('change', href: 'http://gravatar.com/emails') }
+    end
+
+    describe "with invalid information" do
+      before { click_button "Save changes" }
+      it { should have_content('error') }
+    end
   end
 end
