@@ -103,17 +103,26 @@ describe 'User Pages' do
   end
 
   describe 'User profile page' do
-    let(:user) do
-      User.create(email: 'q@q.com', name: 'kemal',
-                  password: 'aaaaaa', password_confirmation: 'aaaaaa')
-    end
+    # let(:user) do
+    #   User.create(email: 'q@q.com', name: 'kemal',
+    #               password: 'aaaaaa', password_confirmation: 'aaaaaa')
+    # end
 
-    # let(:user) {  FactoryGirl.create(:user) }
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
     before { visit user_path(user) }
-    after { user.destroy }
+    # after { user.destroy }
 
     it { should have_content user.name }
     it { should have_title user.name }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
   end
 
   describe 'user edit' do
