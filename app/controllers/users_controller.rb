@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   prepend_before_action :set_user, only: [:edit, :update]
   before_action :signed_in_user, only: [:edit, :update, :index]
   before_action :correct_user, only: [:edit, :update]
+  before_action :admin_user, :only => :destroy
 
   def index
     @users = User.paginate(page: params[:page])
@@ -41,6 +42,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    @user.destroy
+    flash[:notice] = 'Successfully deleted...'
+    redirect_to users_path
   end
 
   private
@@ -63,5 +67,9 @@ class UsersController < ApplicationController
 
     def correct_user
       redirect_to root_path unless current_user?(@user)
+    end
+
+    def admin_user
+      redirect_to root_path unless current_user.admin?
     end
 end

@@ -28,6 +28,7 @@ describe User do
   end
 
   it { should be_valid }
+  it { should_not be_admin }
 
   # OR
 
@@ -48,6 +49,21 @@ describe User do
   describe 'when email not present' do
     before { @user.email = '' }
     it { should_not be_valid }
+  end
+
+  it { should respond_to(:authenticate) }
+  it { should respond_to(:admin) }
+
+  it { should be_valid }
+  it { should_not be_admin }
+
+  describe "with admin attribute set to 'true'" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+
+    it { should be_admin }
   end
 
   # Email
