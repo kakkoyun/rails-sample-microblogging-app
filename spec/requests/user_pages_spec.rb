@@ -123,21 +123,72 @@ describe 'User Pages' do
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
     end
-  end
 
-  describe 'user edit' do
-    let(:user) { FactoryGirl.create :user }
-    before do
-      sign_in user
-      visit edit_user_path(user)
-    end
-    after { user.destroy }
+    describe 'follow/unfollow buttons' do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in user }
 
-    describe 'forbidden attributes' do
-      let(:params) do
-        { user: { admin: true, password: user.password,
-          password_confirmation: user.password } }
+      describe 'following a user' do
+        before { visit user_path(other_user) }
+
+        it 'should increment the followed user count' do
+          expect do
+            click_button "Follow"
+          end.to change(user.followed_users, :count).by(1)
         end
+
+        it 'should increment the other user\'s followers count' do
+          expect do
+            click_button 'Follow'
+          end.to change(other_user.followers, :count).by(1)
+        end
+
+        describe 'toggling the button' do
+          before { click_button 'Follow' }
+          it { should have_xpath("//input[@value='Unfollow']") }
+        end
+      end
+
+      describe 'unfollowing a user' do
+        before do
+          user.follow!(other_user)
+          visit user_path(other_user)
+        end
+
+        it 'should decrement the followed user count' do
+          expect do
+            click_button 'Unfollow'
+          end.to change(user.followed_users, :count).by(-1)
+        end
+
+        it 'should decrement the other user\'s followers count' do
+          expect do
+            click_button 'Unfollow'
+          end.to change(other_user.followers, :count).by(-1)
+        end
+
+        describe 'toggling the button' do
+          before { click_button 'Unfollow' }
+          it { should have_xpath("//input[@value='Follow']") }
+        end
+      end
+    end
+  end
+end
+
+describe 'user edit' do
+  let(:user) { FactoryGirl.create :user }
+  before do
+    sign_in user
+    visit edit_user_path(user)
+  end
+  after { user.destroy }
+
+  describe 'forbidden attributes' do
+    let(:params) do
+      { user: { admin: true, password: user.password,
+        password_confirmation: user.password } }
+      end
 
       # Fix user params as consume admin parameter.
       before do
