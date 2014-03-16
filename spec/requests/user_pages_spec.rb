@@ -77,29 +77,29 @@ describe 'User Pages' do
       end
     end
 
-    # describe 'with valid information' do
-    #   let(:user) { FactoryGirl.create(:user) }
-    #   before do
-    #     fill_in 'Name', with: user.name
-    #     fill_in 'Email', with: user.email
-    #     fill_in 'Password', with: user.password
-    #     fill_in 'Password Confirmation', with: user.password_confirmation
-    #   end
-    #   after { user.destroy }
+    describe 'with valid information' do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        fill_in 'Name', with: user.name
+        fill_in 'Email', with: user.email
+        fill_in 'Password', with: user.password
+        fill_in 'Confirm Password', with: user.password_confirmation
+      end
+      after { user.destroy }
 
-    #   it 'should create a new user' do
-    #     expect { click_button(submit) }.to change(User, :count).by(1)
-    #   end
+      it 'should create a new user' do
+        expect { click_button(submit) }.to change(User, :count).by(1)
+      end
 
-    #   describe 'after saving the user' do
-    #     before { click_button submit }
-    #     let(:user) { User.find_by(email: "foo@bar.com") }
+      describe 'after saving the user' do
+        before { click_button submit }
+        let(:user) { User.find_by(email: "foo@bar.com") }
 
-    #     it { should have_link('Sign-out') }
-    #     it { should have_title(user.name) }
-    #     it { should have_selector('div.alert.alert-success', text: 'Welcome') }
-    #   end
-    # end
+        it { should have_link('Sign-out') }
+        it { should have_title(user.name) }
+        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+      end
+    end
   end
 
   describe 'User profile page' do
@@ -109,8 +109,8 @@ describe 'User Pages' do
     # end
 
     let(:user) { FactoryGirl.create(:user) }
-    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
-    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: 'Foo') }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: 'Bar') }
 
     before { visit user_path(user) }
     # after { user.destroy }
@@ -118,7 +118,7 @@ describe 'User Pages' do
     it { should have_content user.name }
     it { should have_title user.name }
 
-    describe "microposts" do
+    describe 'microposts' do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
@@ -133,7 +133,7 @@ describe 'User Pages' do
     end
     after { user.destroy }
 
-    describe "forbidden attributes" do
+    describe 'forbidden attributes' do
       let(:params) do
         { user: { admin: true, password: user.password,
                   password_confirmation: user.password } }
@@ -146,7 +146,6 @@ describe 'User Pages' do
       end
       specify { expect(user.reload).not_to be_admin }
     end
-  end
 
     describe 'page' do
       it { should have_content('Update your profile') }

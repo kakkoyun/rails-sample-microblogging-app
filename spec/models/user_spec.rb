@@ -17,6 +17,8 @@ describe User do
   it { should respond_to :remember_token }
   it { should respond_to :admin }
   it { should respond_to :microposts }
+  it { should respond_to :feed }
+  it { should respond_to :relationships }
 
   describe 'remember_token' do
     before { @user.save }

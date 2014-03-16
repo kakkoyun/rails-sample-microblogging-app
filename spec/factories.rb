@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :user do
+  factory :superuser do
     name     'Foo Bar Baz'
     email    'foo@bar.com'
     password 'foobarbaz'
@@ -10,7 +10,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :users do
+  factory :user do
     sequence(:name)  { |n| "Person #{n}" }
     sequence(:email) { |n| "person_#{n}@example.com" }
     password 'foobar'
