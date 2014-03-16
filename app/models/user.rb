@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
 
-  has_many :microposts, :dependent => :destroy
-  has_many :relationships, foreign_key: 'follower_id', :dependent => :destroy
+  has_many :microposts, dependent: :destroy
+  has_many :relationships, foreign_key: 'follower_id', dependent: :destroy
+  has_many :followed_users, through: :relationships, source: :followed # !!!
 
   validates :name, presence: true,
                    length: { maximum: 30 }
@@ -27,6 +28,18 @@ class User < ActiveRecord::Base
   def feed
     # Micropost.where(user_id: id)
     microposts
+  end
+
+  def following?(other_user)
+    relationships.find_by(followed_id: other_user.id)
+  end
+
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    relationships.find_by(followed_id: other_user.id).destroy
   end
 
   private
